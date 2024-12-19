@@ -11,23 +11,6 @@ function Install-SNMP {
     Write-Host "SNMP feature has been installed."
 }
 
-# Function to install applications
-function Install-Application {
-    param (
-        [string]$AppName,
-        [string]$DownloadUrl,
-        [string]$InstallerArgs = ""
-    )
-
-    Write-Host "Installing $AppName..."
-    $installerPath = "$env:TEMP\$($AppName -replace ' ', '_')_installer.exe"
-    
-    Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath
-    Start-Process -FilePath $installerPath -ArgumentList $InstallerArgs -Wait
-    Remove-Item $installerPath -Force
-    Write-Host "$AppName has been installed."
-}
-
 # Function to retrieve Windows product key
 function Get-WindowsProductKey {
     Write-Host "Retrieving Windows Product Key..."
@@ -72,6 +55,12 @@ function Set-AutoLogin {
     Write-Host "Auto login has been configured for user $User ."
 }
 
+# Enable Remote Desktop 
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+
+# Set the firewall rule to allow Remote Desktop connections
+New-NetFirewallRule -DisplayName "Remote Desktop" -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 3389
+
 # Main script execution
 Install-SNMP
 
@@ -81,25 +70,26 @@ Add-NewUser
 # Set auto login for the new user
 Set-AutoLogin
 
-# List of applications to install
-$applications = @(
-    @{
-        Name = "Google Chrome"
-        Url = "https://dl.google.com/chrome/install/latest/chrome_installer.exe"
-        Args = "/silent /install"
-    },
-    @{
-        Name = "TeamViewer Host"
-        Url = "https://download .teamviewer.com/download/TeamViewer_Host_Setup.exe"
-        Args = "/S"
-    },
-    @{
-        Name = "Notepad++"
-        Url = "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest/download/npp.8.4.2.Installer.exe"
-        Args = "/S"  # Silent installation
-    }
-)
+# Install Chocolatey
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
+# Install Git
+choco install teamviewer.host -y
+
+# Install Notepad++
+choco install notepadplusplus -y
+
+# Install 7-Zip
+choco install 7zip -y
+
+# Install Google Chrome
+choco install googlechrome -y
+
+# Update Chocolatey
+choco upgrade all -y
+
+# Output a message
+Write-Host "Chocolatey and selected applications have been installed."
 # Install each application in the list
 foreach ($app in $applications) {
     Install-Application -AppName $app.Name -DownloadUrl $app.Url -InstallerArgs $app.Args
