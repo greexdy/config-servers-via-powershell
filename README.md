@@ -11,7 +11,7 @@ Dit PowerShell-script is ontworpen om Windows-hosts automatisch te configureren 
 - het toevoegen van de CCTV user aan de default Users group.
 - auto login instellen voor de CCTV user.
 - het aanzetten van RDP.
-- 
+- hostname aanpassen
 
 ## Vereisten
 
