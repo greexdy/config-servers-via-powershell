@@ -7,6 +7,9 @@ Dit PowerShell-script is ontworpen om Windows-hosts automatisch te configureren 
 - Installeren van noodzakelijke software of updates.
 - installeren van nodige extra features
 - Configureren van gebruikersaccounts en machtigingen.
+- het aanmaken van een CCTV user
+- het toevoegen van de CCTV user aan de default Users group
+- auto login instellen voor de CCTV user
 
 ## Vereisten
 
