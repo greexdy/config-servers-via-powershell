@@ -13,5 +13,6 @@ Dit PowerShell-script is ontworpen om Windows-hosts automatisch te configureren 
 - Windows 10/11 of Windows Server 2016/2019/2022.
 - PowerShell 5.1 of hoger.
 - om dit script uit te voeren hoort u ADMIN te zijn!!:
-  ```powershell set-ExecutionPolicy Bypass -Scope Process -Force
-set-ExecutionPolicy Bypass -Scope Process -Force
+  ```powershell
+  set-ExecutionPolicy Bypass -Scope Process -Force
+
