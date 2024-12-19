@@ -1,4 +1,3 @@
-
 # Function to install SNMP feature
 function Install-SNMP {
     Write-Host "Installing SNMP feature..."
@@ -40,9 +39,47 @@ function Get-WindowsProductKey {
     }
 }
 
+# Function to add a new user and add them to the Users group
+function Add-NewUser  {
+    param (
+        [string]$User  = "CCTV",
+        [string]$Password = "cctv"
+    )
+
+    Write-Host "Adding new user: $User  Name..."
+    $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
+    New-LocalUser  -Name $User  -Password $SecurePassword -FullName "CCTV User" -Description "User  account for CCTV"
+    
+    # Add the new user to the Users group
+    Add-LocalGroupMember -Group "Gebruikers" -Member $User 
+    
+    Write-Host "User  $User  Name has been created and added to the Users group."
+}
+
+# Function to set auto login
+function Set-AutoLogin {
+    param (
+        [string]$User  = "CCTV",
+        [string]$Password = "cctv"
+    )
+
+    Write-Host "Setting up auto login for user: $User  ..."
+    $regPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+    
+    Set-ItemProperty -Path $regPath -Name "AutoAdminLogon" -Value "1"
+    Set-ItemProperty -Path $regPath -Name "DefaultUser Name" -Value $User  
+    Set-ItemProperty -Path $regPath -Name "DefaultPassword" -Value $Password
+    Write-Host "Auto login has been configured for user $User ."
+}
+
 # Main script execution
-Enable-RDP
 Install-SNMP
+
+# Add the new user
+Add-NewUser   
+
+# Set auto login for the new user
+Set-AutoLogin
 
 # List of applications to install
 $applications = @(
@@ -53,7 +90,7 @@ $applications = @(
     },
     @{
         Name = "TeamViewer Host"
-        Url = "https://download.teamviewer.com/download/TeamViewer_Host_Setup.exe"
+        Url = "https://download .teamviewer.com/download/TeamViewer_Host_Setup.exe"
         Args = "/S"
     },
     @{
