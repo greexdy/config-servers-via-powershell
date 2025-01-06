@@ -73,7 +73,7 @@ Set-AutoLogin
 # Install Chocolatey
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# Install Git
+# Install teamviewer-host
 choco install teamviewer.host -y
 
 # Install Notepad++
@@ -82,11 +82,17 @@ choco install notepadplusplus -y
 # Install 7-Zip
 choco install 7zip -y
 
-# Install Google Chrome
+# Install Google-Chrome
 choco install googlechrome -y
 
 # Update Chocolatey
 choco upgrade all -y
+
+# Prompt for the new hostname
+$newHostname = Read-Host "Enter the new hostname"
+
+# Rename the computer
+Rename-Computer -NewName $newHostname -Force
 
 # Output a message
 Write-Host "Chocolatey and selected applications have been installed."
