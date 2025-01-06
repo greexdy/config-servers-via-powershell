@@ -73,7 +73,7 @@ Set-AutoLogin
 # Install Chocolatey
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# Install Git
+# Install teamviewer-host
 choco install teamviewer.host -y
 
 # Install Notepad++
@@ -82,7 +82,7 @@ choco install notepadplusplus -y
 # Install 7-Zip
 choco install 7zip -y
 
-# Install Google Chrome
+# Install Google-Chrome
 choco install googlechrome -y
 
 # Update Chocolatey
