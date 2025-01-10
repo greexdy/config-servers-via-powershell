@@ -39,21 +39,35 @@ function Add-NewUser  {
     Write-Host "User  $User  Name has been created and added to the Users group."
 }
 
-# Function to set auto login
-function Set-AutoLogin {
+# Enable Automatic Login for CCTV User on Windows 11
+
+# Set DevicePasswordLessBuildVersion to 0 in the registry
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device" -Name "DevicePasswordLessBuildVersion" -Value 0
+
+# Function to disable password prompt at login
+function Enable-AutoLogin {
     param (
-        [string]$User  = "CCTV",
-        [string]$Password = "cctv"
+        [string]$Username,
+        [string]$Password
     )
 
-    Write-Host "Setting up auto login for user: $User  ..."
     $regPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-    
-    Set-ItemProperty -Path $regPath -Name "AutoAdminLogon" -Value "1"
-    Set-ItemProperty -Path $regPath -Name "DefaultUser Name" -Value $User  
+
+    # Set DefaultUserName and DefaultPassword
+    Set-ItemProperty -Path $regPath -Name "DefaultUserName" -Value $Username
     Set-ItemProperty -Path $regPath -Name "DefaultPassword" -Value $Password
-    Write-Host "Auto login has been configured for user $User ."
+    Set-ItemProperty -Path $regPath -Name "AutoAdminLogon" -Value "1"
 }
+
+# Define CCTV user credentials
+$username = "CCTV"
+$password = "cctv"  # Replace with the actual password
+
+# Enable automatic login for CCTV user
+Enable-AutoLogin -Username $username -Password $password
+
+Write-Output "Automatic login has been enabled for user $username. Restart your computer to apply the changes."
+
 
 # Enable Remote Desktop 
 Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
@@ -73,7 +87,7 @@ Set-AutoLogin
 # Install Chocolatey
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# Install teamviewer-host
+# Install Git
 choco install teamviewer.host -y
 
 # Install Notepad++
@@ -82,17 +96,11 @@ choco install notepadplusplus -y
 # Install 7-Zip
 choco install 7zip -y
 
-# Install Google-Chrome
+# Install Google Chrome
 choco install googlechrome -y
 
 # Update Chocolatey
 choco upgrade all -y
-
-# Prompt for the new hostname
-$newHostname = Read-Host "Enter the new hostname"
-
-# Rename the computer
-Rename-Computer -NewName $newHostname -Force
 
 # Output a message
 Write-Host "Chocolatey and selected applications have been installed."
