@@ -1,6 +1,6 @@
-# Function to install SNMP feature
+# het installeren van SNMP
 function Install-SNMP {
-    Write-Host "Installing SNMP feature..."
+    Write-Host "SNMP feature installeren..."
     if (Add-WindowsCapability -Online -Name "SNMP.Client~~~~0.0.1.0") {
         # For Windows Server
         Install-WindowsFeature -Name "SNMP" -IncludeManagementTools
@@ -8,17 +8,17 @@ function Install-SNMP {
         # For Windows 10/11
         Add-WindowsCapability -Online -Name "SNMP.Client~~~~0.0.1.0"
     }
-    Write-Host "SNMP feature has been installed."
+    Write-Host "SNMP feature is geïnstalleerd."
 }
 
-# Function to retrieve Windows product key
+# Function voor de Windows product key te vinden
 function Get-WindowsProductKey {
-    Write-Host "Retrieving Windows Product Key..."
+    Write-Host "waar staat die windows code nu..."
     $key = (Get-WmiObject -query 'select * from SoftwareLicensingService').OA3xOriginalProductKey
     if ($key) {
         Write-Host "Windows Product Key: $key"
     } else {
-        Write-Host "Could not retrieve the Windows Product Key."
+        Write-Host "sorry ik kon de windows code niet vinden."
     }
 }
 
@@ -70,11 +70,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # Direct install Google Chrome
 Write-Host "Installing Google Chrome..."
-$chromeUrl = "https://dl.google.com/chrome/install/standalonesetup.exe"
-$chromeInstaller = "$env:TEMP\chrome_installer.exe"
-Invoke-WebRequest -Uri $chromeUrl -OutFile $chromeInstaller
-Start-Process -FilePath $chromeInstaller -Args "/silent /install" -Wait
-Remove-Item $chromeInstaller
+winget install google.chrome
 
 # Direct install TeamViewer Host
 Write-Host "Installing TeamViewer Host..."
@@ -87,7 +83,6 @@ Remove-Item $tvInstaller
 # Chocolatey packages (Notepad++ and 7-Zip)
 choco install notepadplusplus -y
 choco install 7zip -y
-choco install googlechrome -y
 choco upgrade all -y
 
 # Output messages
@@ -95,7 +90,7 @@ Write-Host "Software installations completed."
 
 # Herstarten
 $restart = Read-Host "Herstarten om alle wijzigingen door te voeren? (J/N)"
-if ($restart -eq "J" -or $restart -eq "j") {
+if ($restart -eq "Ja" -or $restart -eq "j") {
   Restart-Computer -Confirm
 } else {
   Write-Host "Herstart later handmatig om hostnaam en auto-login te activeren." -ForegroundColor Yellow

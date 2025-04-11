@@ -31,7 +31,7 @@ function Add-NewUser  {
 
   Write-Host "Adding new user: $User  Name..."
   $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
-  New-LocalUser  -Name $User  -Password $SecurePassword -FullName "CCTV User" -Description "User  account for CCTV"
+  New-LocalUser  -Name $User  -Password $SecurePassword -FullName "CCTV User" -Description "User account for CCTV"
   
   # Add the new user to the Users group
   Add-LocalGroupMember -Group "Gebruikers" -Member $User 
@@ -125,11 +125,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # Direct install Google Chrome
 Write-Host "Installing Google Chrome..."
-$chromeUrl = "https://dl.google.com/chrome/install/standalonesetup.exe"
-$chromeInstaller = "$env:TEMP\chrome_installer.exe"
-Invoke-WebRequest -Uri $chromeUrl -OutFile $chromeInstaller
-Start-Process -FilePath $chromeInstaller -Args "/silent /install" -Wait
-Remove-Item $chromeInstaller
+winget install google.chrome
 
 # Direct install TeamViewer Host
 Write-Host "Installing TeamViewer Host..."
